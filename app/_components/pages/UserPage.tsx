@@ -7,11 +7,12 @@ import DeleteIcon from '@mui/icons-material/Delete';
 import CancelRoundedIcon from '@mui/icons-material/CancelRounded';
 import { useDeleteUserMutation, useGetUserQuery } from "../../_state/users/api";
 import Loading from "../../(routes)/loading";
-import { useState } from "react";
+import useAuth from "../../_hooks/useAuth";
 
 const UserPage = () => {
     const router = useRouter();
     const { id } = useParams();
+    const {token} = useAuth();
     const { data, isError, isFetching } = useGetUserQuery(id as string);
     const [delUser] = useDeleteUserMutation();
     const user = data as User | undefined;
@@ -21,8 +22,8 @@ const UserPage = () => {
     };
 
     const handleDelete = () => {
-        if (user && user.id != undefined) {
-            delUser(user.id);
+        if (user && user.id != undefined && token) {
+            delUser({userId: user.id, token});
             handleClose();
         }
     };

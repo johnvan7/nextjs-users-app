@@ -13,10 +13,9 @@ function Modal({ children }: Props) {
 
     const style = {
         modal: {
-            position: 'absolute' as 'absolute',
+            position: 'fixed',
             top: '50%',
             left: '50%',
-            marginTop: '20px',
             transform: 'translate(-50%, -50%)',
             width: 400,
             bgcolor: 'background.paper',

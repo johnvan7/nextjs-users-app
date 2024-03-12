@@ -5,11 +5,16 @@ import ArrowBackIcon from '@mui/icons-material/ArrowBack';
 import HomeIcon from '@mui/icons-material/Home';
 import { usePathname, useRouter } from 'next/navigation';
 import pathsName from '../../_utils/PathsList';
+import Link from 'next/link';
+import useAuth from '../../_hooks/useAuth';
+
 
 function Header() {
     const pathname = usePathname() as string;
     const router = useRouter();
     const isHome = pathname === '/';
+    const { token } = useAuth();
+    const isLogged = !!token;
 
     return (
         <Box sx={{ flexGrow: 1, marginBottom: 2 }}>
@@ -31,7 +36,19 @@ function Header() {
                     <Typography variant="h6" component="div" sx={{ flexGrow: 1 }}>
                         {pathsName[pathname]}
                     </Typography>
-                    <Button color="inherit">Login</Button>
+                    {isLogged ?
+                        <Link href='/logout' >
+                            <Button
+                                color="inherit"
+                            >Logout</Button>
+                        </Link>
+                        :
+                        <Link href='/login'>
+                            <Button
+                                color="inherit"
+                            >Login</Button>
+                        </Link>
+                    }
                 </Toolbar>
             </AppBar>
         </Box>

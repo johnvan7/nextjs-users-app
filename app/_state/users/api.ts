@@ -15,18 +15,20 @@ const api = createApi({
                 method: 'GET'
             }),
         }),
-        addUser: build.mutation<User, Partial<User>>({
-            query: (user) => ({
+        addUser: build.mutation<User, {user: Partial<User>, token: string}>({
+            query: (args) => ({
                 url: 'users',
                 method: 'POST',
-                body: user,
+                headers: {Authorization: `Bearer ${args.token}`},
+                body: args.user,
             }),
             invalidatesTags: ['Users'],
         }),
-        deleteUser: build.mutation<void, string>({
-            query: (id) => ({
-                url: 'users/' + id,
+        deleteUser: build.mutation<void, {userId: string, token: string}>({
+            query: (args) => ({
+                url: 'users/' + args.userId,
                 method: 'DELETE',
+                headers: {Authorization: `Bearer ${args.token}`},
             }),
             invalidatesTags: ['Users']
         })
