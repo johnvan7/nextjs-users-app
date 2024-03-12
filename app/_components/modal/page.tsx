@@ -1,0 +1,42 @@
+'use client'
+
+import { useRouter } from 'next/navigation';
+import React from 'react'
+import { Box, Modal as MuiModal } from '@mui/material';
+
+type Props = {
+    children: React.ReactNode
+}
+
+function Modal({ children }: Props) {
+    const router = useRouter();
+
+    const style = {
+        modal: {
+            position: 'absolute' as 'absolute',
+            top: '50%',
+            left: '50%',
+            marginTop: '20px',
+            transform: 'translate(-50%, -50%)',
+            width: 400,
+            bgcolor: 'background.paper',
+            boxShadow: 24,
+            borderRadius: 3,
+            p: 4,
+            color: 'text.secondary'
+        },
+    };
+
+    return (
+        <MuiModal
+            open={true}
+            onClose={() => { router.back() }}
+        >
+            <Box sx={style.modal}>
+                {children}
+            </Box>
+        </MuiModal>
+    )
+}
+
+export default Modal;
