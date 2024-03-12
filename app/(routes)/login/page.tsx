@@ -6,10 +6,11 @@ import { useRouter } from 'next/navigation';
 import LoginForm from '../../_components/forms/LoginForm';
 import LoginOtpForm from '../../_components/forms/LoginOtpForm';
 import useAuth from '../../_hooks/useAuth';
+import { postRequest } from '../../_utils/api';
 
 function LoginPage() {
   const router = useRouter();
-  const {setToken} = useAuth();
+  const { setToken } = useAuth();
   const [step, setStep] = useState(0);
 
   const [loginData, setLoginData] = useState({
@@ -30,42 +31,16 @@ function LoginPage() {
   };
 
   const handleNext = () => {
-    const myHeaders = new Headers();
-    myHeaders.append("Content-Type", "application/json");
-
-    const raw = JSON.stringify({
-      email: loginData.email
-    });
-
-    const requestOptions = {
-      method: "POST",
-      headers: myHeaders,
-      body: raw,
-    };
-
-    fetch("http://localhost:5000/auth/login", requestOptions)
+    postRequest('/api/auth/login', { email: loginData.email })
       .then((res) => {
-        setStep(1);
+        if(res.ok)
+          setStep(1);
       })
       .catch((error) => console.error(error));
   };
 
   const handleConfirm = () => {
-    const myHeaders = new Headers();
-    myHeaders.append("Content-Type", "application/json");
-
-    const raw = JSON.stringify({
-      email: loginData.email,
-      otp: loginData.otp
-    });
-
-    const requestOptions = {
-      method: "POST",
-      headers: myHeaders,
-      body: raw,
-    };
-
-    fetch("http://localhost:5000/auth/confirm", requestOptions)
+    postRequest('/api/auth/confirm', { email: loginData.email, otp: loginData.otp })
       .then((res) => {
         res.json().then((json) => {
           sessionStorage.setItem('token', json.token);
