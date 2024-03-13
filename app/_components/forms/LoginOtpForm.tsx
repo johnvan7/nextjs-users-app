@@ -27,8 +27,7 @@ const LoginOtpForm = ({loginData, handleChange, handleSubmit}: Props) => {
           justifyContent={"center"}
         >
           <Button
-            variant="outlined"
-            color="success"
+            variant="contained"
             onClick={handleSubmit}
           >
             Confirm
