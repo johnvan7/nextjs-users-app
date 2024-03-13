@@ -1,5 +1,6 @@
 
-export const postRequest = (path: string, body: any) => {
+export const postRequest = (path: string, body: any): Promise<any> => {
+  return new Promise((resolve, reject) => {
     const myHeaders = new Headers();
     myHeaders.append("Content-Type", "application/json");
 
@@ -11,5 +12,15 @@ export const postRequest = (path: string, body: any) => {
       body: raw,
     };
 
-    return fetch(path, requestOptions);
+    fetch(path, requestOptions)
+      .then((res) => {
+        res.json().then((json) => {
+          if(res.ok){
+            return resolve(json);
+          } else {
+            return reject(json);
+          }
+        });
+      })
+  });
 }

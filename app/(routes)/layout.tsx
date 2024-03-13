@@ -11,6 +11,8 @@ import Header from "../_components/pages/Header";
 import { usersStore } from "../_state/users/store";
 import { Provider } from "react-redux";
 import { AuthProvider } from "../_contexts/AuthContext";
+import SnackbarView, { NotificationConfig } from "../_components/views/SnackbarView";
+import { NotificationProvider } from "../_contexts/NotificationContext";
 
 const inter = Inter({ subsets: ["latin"] });
 
@@ -22,23 +24,32 @@ export default function RootLayout({
   children: React.ReactNode
 }>) {
   let sessionToken = '';
-  if(sessionStorage){
+  if (sessionStorage) {
     const token = sessionStorage.getItem('token');
     sessionToken = token ? token : '';
   }
-  const [authToken, setAuthToken] = useState(sessionToken);
+  const [token, setToken] = useState(sessionToken);
+  const [notification, showNotification] = useState<NotificationConfig>({id: 0, message: '', severity: 'info' });
 
   return (
     <html lang="en">
       <body className={inter.className}>
         <Suspense fallback={<Loading />}>
-          <Provider store={usersStore}>
-            <AuthProvider value={{token: authToken, setToken: setAuthToken}}>
-              <Header />
-              {children}
-              {modals}
-            </AuthProvider>
-          </Provider>
+          <NotificationProvider value={{ notification, showNotification }}>
+            <Provider store={usersStore}>
+              <AuthProvider value={{ token, setToken }}>
+                <Header />
+                {children}
+                {modals}
+              </AuthProvider>
+            </Provider>
+          </NotificationProvider>
+          <SnackbarView
+            id={notification.id}
+            message={notification.message}
+            severity={notification.severity}
+            duration={notification.duration}
+          />
         </Suspense>
       </body>
     </html>

@@ -7,3 +7,10 @@ type User = {
     country: string,
     gender: 'female' | 'male' | 'other',
 };
+
+type MutationError = {
+    data: {
+        message: string
+    },
+    status: number,
+};

@@ -7,14 +7,22 @@ import { usePathname, useRouter } from 'next/navigation';
 import pathsName from '../../_utils/PathsList';
 import Link from 'next/link';
 import useAuth from '../../_hooks/useAuth';
+import useNotification from '../../_hooks/useNotification';
 
 
 function Header() {
     const pathname = usePathname() as string;
     const router = useRouter();
     const isHome = pathname === '/';
-    const { token } = useAuth();
+    const { token, setToken } = useAuth();
+    const { showNotification } = useNotification();
     const isLogged = !!token;
+
+    const handleLogout = () => {
+        sessionStorage.removeItem('token');
+        setToken('');
+        showNotification({id: Math.random(), message: 'Logged out', severity: 'info'});
+    };
 
     return (
         <Box sx={{ flexGrow: 1, marginBottom: 2 }}>
@@ -37,11 +45,10 @@ function Header() {
                         {pathsName[pathname]}
                     </Typography>
                     {isLogged ?
-                        <Link href='/logout' >
-                            <Button
-                                color="inherit"
-                            >Logout</Button>
-                        </Link>
+                        <Button
+                            color="inherit"
+                            onClick={handleLogout}
+                        >Logout</Button>
                         :
                         <Link href='/login'>
                             <Button

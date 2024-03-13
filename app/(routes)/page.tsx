@@ -11,7 +11,7 @@ export default function Home() {
       flexDirection={'column'}
     >
       <Link href="/users">
-        <Button variant="outlined" startIcon={<GroupIcon />}>
+        <Button variant="contained" startIcon={<GroupIcon />}>
           Users
         </Button>
       </Link>

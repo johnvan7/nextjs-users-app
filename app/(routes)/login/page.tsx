@@ -7,10 +7,12 @@ import LoginForm from '../../_components/forms/LoginForm';
 import LoginOtpForm from '../../_components/forms/LoginOtpForm';
 import useAuth from '../../_hooks/useAuth';
 import { postRequest } from '../../_utils/api';
+import useNotification from '../../_hooks/useNotification';
 
 function LoginPage() {
   const router = useRouter();
   const { setToken } = useAuth();
+  const { showNotification } = useNotification();
   const [step, setStep] = useState(0);
 
   const [loginData, setLoginData] = useState({
@@ -32,23 +34,25 @@ function LoginPage() {
 
   const handleNext = () => {
     postRequest('/api/auth/login', { email: loginData.email })
-      .then((res) => {
-        if(res.ok)
-          setStep(1);
+      .then(() => {
+        setStep(1);
       })
-      .catch((error) => console.error(error));
+      .catch((error) => {
+        showNotification({id: Math.random(), message: 'Error: ' + error.message, severity: 'error'});
+      });
   };
 
   const handleConfirm = () => {
     postRequest('/api/auth/confirm', { email: loginData.email, otp: loginData.otp })
-      .then((res) => {
-        res.json().then((json) => {
-          sessionStorage.setItem('token', json.token);
-          setToken(json.token);
-          handleClose();
-        })
-      })
-      .catch((error) => console.error(error));
+    .then((json) => {
+      sessionStorage.setItem('token', json.token);
+      setToken(json.token);
+      handleClose();
+      showNotification({id: Math.random(), message: 'Logged in', severity: 'success'});
+    })
+    .catch((error) => {
+      showNotification({id: Math.random(), message: 'Error: ' + error.message, severity: 'error'});
+    })
   };
 
   return (

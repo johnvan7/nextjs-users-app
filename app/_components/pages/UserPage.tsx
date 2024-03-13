@@ -8,13 +8,16 @@ import CancelRoundedIcon from '@mui/icons-material/CancelRounded';
 import { useDeleteUserMutation, useGetUserQuery } from "../../_state/users/api";
 import Loading from "../../(routes)/loading";
 import useAuth from "../../_hooks/useAuth";
+import { useEffect, useState } from "react";
+import useNotification from "../../_hooks/useNotification";
 
 const UserPage = () => {
     const router = useRouter();
     const { id } = useParams();
-    const {token} = useAuth();
+    const { token } = useAuth();
     const { data, isError, isFetching } = useGetUserQuery(id as string);
-    const [delUser] = useDeleteUserMutation();
+    const [delUser, deleteResult] = useDeleteUserMutation();
+    const { showNotification } = useNotification();
     const user = data as User | undefined;
 
     const handleClose = () => {
@@ -22,11 +25,21 @@ const UserPage = () => {
     };
 
     const handleDelete = () => {
-        if (user && user.id != undefined && token) {
-            delUser({userId: user.id, token});
-            handleClose();
+        if (user && user.id != undefined) {
+            delUser({ userId: user.id, token });
         }
     };
+
+    useEffect(() => {
+        if (deleteResult.status === 'fulfilled') {
+            showNotification({id: Math.random(), message: 'User deleted successfully', severity: 'success'});
+            handleClose();
+        } else if (deleteResult.status == 'rejected'){
+            const error = (deleteResult.error as MutationError).data.message;
+            const message = error ? 'Error: ' + error : 'Error occured';
+            showNotification({id: Math.random(), message, severity: 'error'});
+        }
+    }, [deleteResult]);
 
     return (
         <>
@@ -89,7 +102,7 @@ const UserPage = () => {
                                 color='error'
                                 onClick={handleDelete}
                             >
-                                <DeleteIcon color='primary' />
+                                <DeleteIcon />
                             </Button>
                         </>
                     )
