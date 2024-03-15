@@ -1,14 +1,14 @@
 'use client'
 
 import { useRouter } from 'next/navigation';
-import React from 'react'
+import { ReactNode } from 'react'
 import { Box, Modal as MuiModal } from '@mui/material';
 
 type Props = {
-    children: React.ReactNode
+    children: ReactNode
 }
 
-function Modal({ children }: Props) {
+function ModalPage({ children }: Props) {
     const router = useRouter();
 
     const style = {
@@ -38,4 +38,4 @@ function Modal({ children }: Props) {
     )
 }
 
-export default Modal;
+export default ModalPage;

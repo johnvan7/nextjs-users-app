@@ -38,21 +38,23 @@ function LoginPage() {
         setStep(1);
       })
       .catch((error) => {
-        showNotification({id: Math.random(), message: 'Error: ' + error.message, severity: 'error'});
+        const message = (error && error.message) ? 'Error: ' + error.message : 'Error';
+        showNotification({ id: Math.random(), message, severity: 'error' });
       });
   };
 
   const handleConfirm = () => {
     postRequest('/api/auth/confirm', { email: loginData.email, otp: loginData.otp })
-    .then((json) => {
-      sessionStorage.setItem('token', json.token);
-      setToken(json.token);
-      handleClose();
-      showNotification({id: Math.random(), message: 'Logged in', severity: 'success'});
-    })
-    .catch((error) => {
-      showNotification({id: Math.random(), message: 'Error: ' + error.message, severity: 'error'});
-    })
+      .then((json) => {
+        sessionStorage.setItem('token', json.token);
+        setToken(json.token);
+        handleClose();
+        showNotification({ id: Math.random(), message: 'Logged in', severity: 'success' });
+      })
+      .catch((error) => {
+        const message = (error && error.message) ? 'Error: ' + error.message : 'Error';
+        showNotification({ id: Math.random(), message, severity: 'error' });
+      })
   };
 
   return (

@@ -20,7 +20,13 @@ export const postRequest = (path: string, body: any): Promise<any> => {
           } else {
             return reject(json);
           }
+        })
+        .catch(() => {
+          return reject();
         });
+      })
+      .catch(() => {
+        return reject();
       })
   });
 }
