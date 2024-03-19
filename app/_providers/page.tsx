@@ -3,14 +3,10 @@ import SnackbarView, { NotificationConfig } from '@/_components/views/SnackbarVi
 import { AuthProvider } from '@/_contexts/AuthContext';
 import { NotificationProvider } from '@/_contexts/NotificationContext';
 import { usersStore } from '@/_state/users/store';
-import React, { ReactNode, useEffect, useState } from 'react'
+import React, { useEffect, useState } from 'react'
 import { Provider } from 'react-redux';
 
-type Props = {
-    children: ReactNode;
-}
-
-const Providers = ({ children }: Props) => {
+const Providers = (props: any) => {
     const [token, setToken] = useState('');
     const [notification, showNotification] = useState<NotificationConfig>({ id: 0, message: '', severity: 'info' });
 
@@ -30,7 +26,7 @@ const Providers = ({ children }: Props) => {
             <NotificationProvider value={{ notification, showNotification }}>
                 <Provider store={usersStore}>
                     <AuthProvider value={{ token, setToken }}>
-                        {children}
+                        {props.children}
                     </AuthProvider>
                 </Provider>
             </NotificationProvider>

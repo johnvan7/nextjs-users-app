@@ -4,11 +4,7 @@ import { useRouter } from 'next/navigation';
 import { ReactNode } from 'react'
 import { Box, Modal as MuiModal } from '@mui/material';
 
-type Props = {
-    children: ReactNode
-}
-
-function ModalPage({ children }: Props) {
+function ModalPage(props: any) {
     const router = useRouter();
 
     const style = {
@@ -32,7 +28,7 @@ function ModalPage({ children }: Props) {
             onClose={() => { router.back() }}
         >
             <Box sx={style.modal}>
-                {children}
+                {props.children}
             </Box>
         </MuiModal>
     )
